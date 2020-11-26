@@ -7,8 +7,13 @@
   - name: update repository index
     yum:
       update_cache: yes
+    when: ansible_distribution in ["CentOS"]
 
-  - name: remove git package
-    yum:
-      name: git
-      state: absent
+  - name: install git & vim
+    package:
+      name: 
+        - "{{ git_package }}"
+        - "{{ vim_package }}"
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS" and ansible_product_name == "Alibaba Cloud ECS"
