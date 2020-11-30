@@ -1,0 +1,42 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+ 
+  - name: install updates
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+ 
+  - name: update repository index
+    yum:
+      update_cache: yes
+    when: ansible_distribution in ["CentOS"]
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create operat user
+    tags: always
+    user:
+      name: operat
+      groups: root
+  
+  - name: add ssh key for operat
+    tags: always
+    authorized_key:
+      user: operat
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCDiQE6o5lF6reEDdJtuakEoSWzr8JKOFmssyg5k44E8L5yp3DcVJjQDvNfe8ndmWRjAAjxeBUEKaFJZrhbUiChlLOye1WQEmhDaJXIBEt7Ab8ZX1xMUICD1V+kiavhpIZH6wrw4bo3/8MtPa503WXzoatBmVYgcZr0ZdqJVfZN60u/FkECBd297x/3e9J2EpIrszTQHX94ihyZijJvR9cSgwMXdCAFqxap2xywujBAcxvEcdD3XK1w2U2Ce5KkNHoqG7pNw7HyK8S092l/hmK58AvGRI5HKdhavxCJFuYZhLd0UV5RTOpxCAudMJrQ9nSfhOw2tK7Q6TT/z0dV/eLj"
+
+  - name: add sudoers file for operat
+    tags: always
+    copy:
+      src: sudoer_operat
+      dest: /etc/sudoers.d/operat
+      owner: root
+      group: root
+      mode: 0440

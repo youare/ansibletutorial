@@ -4,5 +4,5 @@ masternode git_package=git vim_package=vim
 [web_servers]
 masternode git_package=git vim_package=vim
 
-[file_servers]
+[db_servers]
 masternode git_package-git vim_package=vim
